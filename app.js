@@ -122,8 +122,13 @@ function displayDescendants(person, people){
   let children = people.filter(function(el){
     return(el["parents"].includes(person["id"]));
   });
-  alert("Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
-  // let grandchildren
+  if (children.length > 0)
+  {
+    alert(person.firstName + " " + person.lastName + "'s Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
+  }
+  for (let i = 0; i < children.length; i++){
+    displayDescendants(children[i], people);
+  }
 }
 
 // function that prompts and validates user input
