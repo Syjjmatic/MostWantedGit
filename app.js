@@ -13,7 +13,6 @@ function app(people){
       break;
     case 'no':
       searchResults = searchByMultipleCriteria(people);
-      displayPeople(searchResults);
       break;
       default:
     app(people); // restart app
@@ -24,7 +23,6 @@ function app(people){
   searchResults = searchResults[0];
   mainMenu(searchResults, people);
 }
-
 // Menu function to call once you find who you are looking for
 function mainMenu(person, people){
 
@@ -46,7 +44,7 @@ function mainMenu(person, people){
     // TODO: get person's family
     break;
     case "descendants":
-    // TODO: get person's descendants
+    displayDescendants(person, people);
     break;
     case "restart":
     app(people); // restart
@@ -78,7 +76,7 @@ function searchBySingleCriteria(people){
   let criteria = window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria);
   let searchValue = window.promptFor("What " + criteria + " would you like to search for?", chars);
   return people.filter(function(el){
-    if (el[criteria].toLowerCase() == searchValue.toLowerCase()){
+    if (el[criteria] == searchValue){
       return true;
     }
     else{
@@ -88,12 +86,14 @@ function searchBySingleCriteria(people){
 }
 
 function searchByMultipleCriteria(people){
+  let keepSearching;
   do{
     people = searchBySingleCriteria(people);
     displayPeople(people);
-    var keepSearching = window.promptFor("Would you like to narrow down your search with additional criteria?", yesNo)
+    keepSearching = window.promptFor("Would you like to narrow down your search with additional criteria?", yesNo)
 
-  }while(keepSearching === "yes")
+  }while(keepSearching === "yes" && people.length > 1);
+  return people;
 }
 
 // alerts a list of people
@@ -116,6 +116,14 @@ function displayPerson(person){
   personInfo += "Eye Color: " + person.eyeColor + "\n";
   personInfo += "Occupation: " + person.occupstion + "\n";
   alert(personInfo);
+}
+function displayDescendants(person, people){
+  //Display children of person, and children of children.
+  let children = people.filter(function(el){
+    return(el["parents"].includes(person["id"]));
+  });
+  alert("Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
+  // let grandchildren
 }
 
 // function that prompts and validates user input
