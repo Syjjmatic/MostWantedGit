@@ -75,8 +75,8 @@ function searchByName(people){
 }
 
 function searchBySingleCriteria(people){
-  let criteria = window.promptFor("What criteria would you like to search by: gender, height, weight, eyeColor, occupation?", validCriteria);
-  let searchValue = window.promptFor("What " + criteria + " would you like to search for", chars);
+  let criteria = window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria);
+  let searchValue = window.promptFor("What " + criteria + " would you like to search for?", chars);
   return people.filter(function(el){
     if (el[criteria].toLowerCase() == searchValue.toLowerCase()){
       return true;
