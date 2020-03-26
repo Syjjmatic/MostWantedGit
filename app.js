@@ -12,7 +12,7 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      // TODO: search by traits
+      searchBySingleCriteria(people);
       break;
       default:
     app(people); // restart app
@@ -20,6 +20,7 @@ function app(people){
   }
   
   // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
+  searchResults = searchResults[0];
   mainMenu(searchResults, people);
 }
 
@@ -37,7 +38,8 @@ function mainMenu(person, people){
 
   switch(displayOption){
     case "info":
-    // TODO: get person's info
+    displayPerson(person);
+    mainMenu(person, people);
     break;
     case "family":
     // TODO: get person's family
@@ -60,7 +62,7 @@ function searchByName(people){
   let lastName = promptFor("What is the person's last name?", chars);
 
   let foundPerson = people.filter(function(person){
-    if(person.firstName === firstName && person.lastName === lastName){
+    if(person.firstName.toLowerCase() === firstName.toLowerCase() && person.lastName.toLowerCase() === lastName.toLowerCase()){
       return true;
     }
     else{
@@ -70,6 +72,18 @@ function searchByName(people){
   // TODO: find the person using the name they entered
   return foundPerson;
 }
+// function searchBySingleCriteria(people){
+//   let criteria = window.promptFor("What criteria would you like to search by: firstName, lastName, gender, dob, height, weight, eyeColor, occupation, parents, or currentSpouse?", validCriteria).toLowerCase();
+//   switch(criteria){
+//     case 'firstName':
+//       searchByFirstName();
+//       break;
+//     case 'lastName':
+//       searchByLastName();
+//       break;
+//     case ''
+//   }
+// }
 
 // alerts a list of people
 function displayPeople(people){
@@ -84,6 +98,12 @@ function displayPerson(person){
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
   // TODO: finish getting the rest of the information to display
+  personInfo += "Gender: " + person.gender + "\n";
+  personInfo += "DOB: " + person.dob + "\n";
+  personInfo += "Height: " + person.height + "\n";
+  personInfo += "Weight: " + person.weight + "\n";
+  personInfo += "Eye Color: " + person.eyeColor + "\n";
+  personInfo += "Occupation: " + person.occupstion + "\n";
   alert(personInfo);
 }
 
@@ -93,6 +113,10 @@ function promptFor(question, valid){
     var response = prompt(question).trim();
   } while(!response || !valid(response));
   return response;
+}
+// helper function to check if user enters a valid criteria
+function validCriteria(input){
+  return (input === "firstName" || input === "lastName" || input === "gender" || input === "dob" || input === "height" || input === "weight" || input === "eyeColor" || input === "occupation" || input === "parents" || input === "currentSpouse");
 }
 
 // helper function to pass into promptFor to validate yes/no answers
