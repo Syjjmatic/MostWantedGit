@@ -12,7 +12,8 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      searchBySingleCriteria(people);
+      searchResults = searchBySingleCriteria(people);
+      displayPeople(searchResults);
       break;
       default:
     app(people); // restart app
@@ -72,18 +73,19 @@ function searchByName(people){
   // TODO: find the person using the name they entered
   return foundPerson;
 }
-// function searchBySingleCriteria(people){
-//   let criteria = window.promptFor("What criteria would you like to search by: firstName, lastName, gender, dob, height, weight, eyeColor, occupation, parents, or currentSpouse?", validCriteria).toLowerCase();
-//   switch(criteria){
-//     case 'firstName':
-//       searchByFirstName();
-//       break;
-//     case 'lastName':
-//       searchByLastName();
-//       break;
-//     case ''
-//   }
-// }
+function searchBySingleCriteria(people){
+  let criteria = window.promptFor("What criteria would you like to search by: firstName, lastName, gender, dob, height, weight, eyeColor, occupation, parents, or currentSpouse?", validCriteria).toLowerCase();
+  let searchValue = window.promptFor("What " + criteria + " would you like to search for", chars);
+  return people.filter(function(el){
+    if (el[criteria] === searchValue){
+      return true;
+    }
+    else{
+      return false;
+    }
+  });
+
+}
 
 // alerts a list of people
 function displayPeople(people){
