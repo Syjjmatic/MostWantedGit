@@ -9,12 +9,14 @@ var currentQuestion;
 var people;
 var searchResults;
 var firstName;
+var currentPerson;
+var descendants;
 
 // app is the function called to start the entire application
 function app(database){
   people = database;
   currentFunction = appPartTwo;
-  promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
+  promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo);
 }
 function appPartTwo(searchType){
   currentFunction = appPartThree;
@@ -45,22 +47,23 @@ function mainMenu(person, people){
     printToPage("Could not find that individual.");
     return app(people); // restart
   }
+  currentPerson = person;
   currentFunction = mainMenuPartTwo;
   promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", chars);
 }
 function mainMenuPartTwo(displayOption){
   switch(displayOption.toLowerCase()){
     case "info":
-    displayPerson(person);
-    mainMenu(person, people);
+    displayPerson(currentPerson);
+    mainMenu(currentPerson, people);
     break;
     case "family":
-    displayImmediateFamilyOf(person, people);
-    mainMenu(person, people);
+    displayImmediateFamilyOf(currentPerson, people);
+    mainMenu(currentPerson, people);
     break;
     case "descendants":
-    displayDescendants(person, people);
-    mainMenu(person, people);
+    displayDescendants(currentPerson, people);
+    mainMenu(currentPerson, people);
     break;
     case "restart":
     app(people); // restart
@@ -68,7 +71,7 @@ function mainMenuPartTwo(displayOption){
     case "quit":
     return; // stop execution
     default:
-    return mainMenu(person, people); // ask again
+    return mainMenu(currentPerson, people); // ask again
   }
 }
 
@@ -139,15 +142,15 @@ function displayPeople(people){
 function displayPerson(person){
   // print all of the information about a person:
   // height, weight, age, name, occupation, eye color.
-  let personInfo = "First Name: " + person.firstName + "\n";
-  personInfo += "Last Name: " + person.lastName + "\n";
+  let personInfo = "First Name: " + person.firstName + "<hr>";
+  personInfo += "Last Name: " + person.lastName + "<hr>";
   // TODO: finish getting the rest of the information to display
-  personInfo += "Gender: " + person.gender + "\n";
-  personInfo += "DOB: " + person.dob + "\n";
-  personInfo += "Height: " + person.height + "\n";
-  personInfo += "Weight: " + person.weight + "\n";
-  personInfo += "Eye Color: " + person.eyeColor + "\n";
-  personInfo += "Occupation: " + person.occupation + "\n";
+  personInfo += "Gender: " + person.gender + "<hr>";
+  personInfo += "DOB: " + person.dob + "<hr>";
+  personInfo += "Height: " + person.height + "<hr>";
+  personInfo += "Weight: " + person.weight + "<hr>";
+  personInfo += "Eye Color: " + person.eyeColor + "<hr>";
+  personInfo += "Occupation: " + person.occupation;
   printToPage(personInfo);
 }
 function displayDescendants(person, people){
@@ -233,7 +236,7 @@ function validateResponse(response){
     promptFor(currentQuestion, valid);
   }
   else{
-    currentFunction(response);
+    currentFunction(response.toLowerCase());
   }
 }
 // helper function to check if user enters a valid criteria
