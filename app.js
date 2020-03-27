@@ -92,7 +92,7 @@ function mainMenuPartTwo(displayOption){
 function searchByName(){
   searchResults = people;
   currentFunction = getLastName;
-  firstName = promptFor("What is the person's first name?", chars);
+  promptFor("What is the person's first name?", chars);
 }
 function getLastName(firstName){
   searchResults = searchResults.filter(p => p.firstName.toLowerCase() === firstName.toLowerCase());
