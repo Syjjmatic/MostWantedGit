@@ -11,9 +11,12 @@ var searchResults;
 var firstName;
 var currentPerson;
 var descendants;
+var criteria;
+var keepSearching;
 
 // app is the function called to start the entire application
 function app(database){
+  document.getElementById("mostwanted").innerHTML = "";
   people = database;
   currentFunction = appPartTwo;
   promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo);
@@ -25,7 +28,8 @@ function appPartTwo(searchType){
       searchByName();
       break;
     case 'no':
-      searchByMultipleCriteria(people);
+      searchResults = people;
+      searchByMultipleCriteria();
       break;
       default:
     app(people); // restart app
@@ -92,22 +96,30 @@ function getPersonBasedOnName(lastName){
   mainMenu(foundPerson, people);
 }
 
-function searchBySingleCriteria(people){
-  let criteria = window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria).toLowerCase().split(" ").join("");
-  let searchValue = window.promptFor("What " + criteria + " would you like to search for?", chars);
+function searchBySingleCriteria(){
+  currentFunction = searchBySingleCriteriaPartTwo;
+  window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria);
+}
+function searchBySingleCriteriaPartTwo(response){
+  criteria = response.split(" ").join("");
+  currentFunction = searchBySingleCriteriaPartThree;
+  window.promptFor("What " + criteria + " would you like to search for?", chars);
+}
+function searchBySingleCriteriaPartThree(response){
+  let searchValue = response;
   if(isNaN(searchValue)){
     searchValue = searchValue.toLowerCase();
   }
 
   if(criteria === "eyecolor"){
-    return people.filter(function(el){
+    searchResults = searchResults.filter(function(el){
       if(el.eyeColor == searchValue){
         return true;
       }
     })
   }
-
-  return people.filter(function(el){
+  else{
+  searchResults = searchResults.filter(function(el){
      if (el[criteria] == searchValue){
       return true;
     }
@@ -115,23 +127,31 @@ function searchBySingleCriteria(people){
       return false;
     }
   });
+  }
+  displayPeople(searchResults);
+  searchByMultipleCriteriaPartTwo();
 }
 
-function searchByMultipleCriteria(people){
-  let keepSearching;
-  do{
-    people = searchBySingleCriteria(people);
-    displayPeople(people);
-    keepSearching = window.promptFor("Would you like to narrow down your search with additional criteria?", yesNo)
-
-  }while(keepSearching === "yes" && people.length > 1);
-  return people;
+function searchByMultipleCriteria(){
+  searchBySingleCriteria();
+}
+function searchByMultipleCriteriaPartTwo(){
+  currentFunction = searchByMultipleCriteriaPartThree;
+  window.promptFor("Would you like to narrow down your search with additional criteria?", yesNo);
+}
+function searchByMultipleCriteriaPartThree(response){
+  if(response === "yes" && searchResults.length > 1){
+    searchByMultipleCriteria();
+  }
+  else{
+    appPartThree();
+  }
 }
 
 // prints a list of people
-function displayPeople(people){
-  if(people.length > 0){
-    printToPage(people.map(function(person){
+function displayPeople(peopleToDisplay){
+  if(peopleToDisplay.length > 0){
+    printToPage(peopleToDisplay.map(function(person){
       return person.firstName + " " + person.lastName;
     }).join("<hr>"));
   }
