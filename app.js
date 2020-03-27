@@ -29,11 +29,11 @@ function mainMenu(person, people){
   /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
 
   if(!person){
-    alert("Could not find that individual.");
+    printToPage("Could not find that individual.");
     return app(people); // restart
   }
 
-  let displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
+  let displayOption = promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", chars);
 
   switch(displayOption.toLowerCase()){
     case "info":
@@ -110,15 +110,15 @@ function searchByMultipleCriteria(people){
   return people;
 }
 
-// alerts a list of people
+// prints a list of people
 function displayPeople(people){
   if(people.length > 0){
-    alert(people.map(function(person){
+    printToPage(people.map(function(person){
       return person.firstName + " " + person.lastName;
     }).join("\n"));
   }
   else{
-    alert("No people found.");
+    printToPage("No people found.");
   }
 }
 
@@ -134,7 +134,7 @@ function displayPerson(person){
   personInfo += "Weight: " + person.weight + "\n";
   personInfo += "Eye Color: " + person.eyeColor + "\n";
   personInfo += "Occupation: " + person.occupation + "\n";
-  alert(personInfo);
+  printToPage(personInfo);
 }
 function displayDescendants(person, people){
   //Display children of person, and children of children.
@@ -143,10 +143,10 @@ function displayDescendants(person, people){
   });
   if (children.length > 0)
   {
-    alert(person.firstName + " " + person.lastName + "'s Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
+    printToPage(person.firstName + " " + person.lastName + "'s Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
   }
   else{
-    alert(person.firstName + " " + person.lastName + " does not have any children in the database.");
+    printToPage(person.firstName + " " + person.lastName + " does not have any children in the database.");
   }
   for (let i = 0; i < children.length; i++){
     displayDescendants(children[i], people);
@@ -181,7 +181,7 @@ function displayImmediateFamilyOf(person, people){
   if (spouse.length > 0){
     immediateFamily += "\nSpouse: " + spouse.map(s => "\n" + s.firstName + " " + s.lastName);
   }
-  alert(immediateFamily);
+  printToPage(immediateFamily);
 }
 function checkIfTwoArraysHaveAnElementInCommon(arrayOne, arrayTwo){
   for (let i = 0; i < arrayOne.length; i++){
@@ -193,11 +193,18 @@ function checkIfTwoArraysHaveAnElementInCommon(arrayOne, arrayTwo){
   }
   return false;
 }
+function printToPage(textToDisplay){
+  document.getElementById("mostwanted").innerHTML = textToDisplay;
+}
+function getUserInput(textToDisplay){
+  printToPage(textToDisplay);
+  return document.getElementById("thistext");
+}
 
 // function that prompts and validates user input
 function promptFor(question, valid){
   do{
-    var response = prompt(question).trim();
+    var response = getUserInput(question).trim();
   } while(!response || !valid(response));
   return response;
 }
