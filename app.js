@@ -112,9 +112,14 @@ function searchByMultipleCriteria(people){
 
 // alerts a list of people
 function displayPeople(people){
-  alert(people.map(function(person){
-    return person.firstName + " " + person.lastName;
-  }).join("\n"));
+  if(people.length > 0){
+    alert(people.map(function(person){
+      return person.firstName + " " + person.lastName;
+    }).join("\n"));
+  }
+  else{
+    alert("No people found.");
+  }
 }
 
 function displayPerson(person){
