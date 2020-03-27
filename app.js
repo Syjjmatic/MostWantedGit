@@ -41,10 +41,12 @@ function mainMenu(person, people){
     mainMenu(person, people);
     break;
     case "family":
-    // TODO: get person's family
+    displayImmediateFamilyOf(person, people);
+    mainMenu(person, people);
     break;
     case "descendants":
     displayDescendants(person, people);
+    mainMenu(person, people);
     break;
     case "restart":
     app(people); // restart
@@ -114,7 +116,7 @@ function displayPerson(person){
   personInfo += "Height: " + person.height + "\n";
   personInfo += "Weight: " + person.weight + "\n";
   personInfo += "Eye Color: " + person.eyeColor + "\n";
-  personInfo += "Occupation: " + person.occupstion + "\n";
+  personInfo += "Occupation: " + person.occupation + "\n";
   alert(personInfo);
 }
 function displayDescendants(person, people){
@@ -126,9 +128,53 @@ function displayDescendants(person, people){
   {
     alert(person.firstName + " " + person.lastName + "'s Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
   }
+  else{
+    alert(person.firstName + " " + person.lastName + " does not have any children in the database.");
+  }
   for (let i = 0; i < children.length; i++){
     displayDescendants(children[i], people);
   }
+}
+function displayImmediateFamilyOf(person, people){
+  //Display parents and siblings of person.
+  let immediateFamily = "Immediate family of " + person.firstName + " " + person.lastName + ":";
+  let parents = people.filter(function(el){
+    if (person.parents.includes(el.id)){
+      return true;
+    }
+    else{
+      return false;
+    }
+  });
+  let siblings = people.filter(function(el){
+    if (el.id === person.id){
+      return false;
+    }
+    return checkIfTwoArraysHaveAnElementInCommon(person.parents, el.parents);
+  });
+  let spouse = people.filter(function(el){
+    return person.currentSpouse === el.id;
+  });
+  if (parents.length > 0){
+    immediateFamily += "\nParent(s): " + parents.map(p => "\n" + p.firstName + " " + p.lastName);
+  }
+  if (siblings.length > 0){
+    immediateFamily += "\nSibling(s): " + siblings.map(s => "\n" + s.firstName + " " + s.lastName);
+  }
+  if (spouse.length > 0){
+    immediateFamily += "\nSpouse: " + spouse.map(s => "\n" + s.firstName + " " + s.lastName);
+  }
+  alert(immediateFamily);
+}
+function checkIfTwoArraysHaveAnElementInCommon(arrayOne, arrayTwo){
+  for (let i = 0; i < arrayOne.length; i++){
+    for (let j = 0; j < arrayTwo.length; j++){
+      if (arrayOne[i] === arrayTwo[j]){
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 // function that prompts and validates user input
