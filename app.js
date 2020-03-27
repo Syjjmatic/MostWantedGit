@@ -16,12 +16,14 @@ var keepSearching;
 
 // app is the function called to start the entire application
 function app(database){
+  document.getElementById("startsearching").innerHTML = "Start Searching";
   document.getElementById("mostwanted").innerHTML = "";
   people = database;
   currentFunction = appPartTwo;
   promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo);
 }
 function appPartTwo(searchType){
+  document.getElementById("startsearching").innerHTML = "Start Over";
   currentFunction = appPartThree;
   switch(searchType){
     case 'yes':
