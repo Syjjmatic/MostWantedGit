@@ -21,13 +21,13 @@
 
     <div class="jumbotron">
       <!--Insert logic into p tag below-->
-      <p id="prompt"></p>
-      <p class="lead" id="mostwanted">Sample text for logic area</p>
+      <h3 class="title" id="prompt">Search the Most Wanted</h3>
+      <p class="lead" id="mostwanted" style="display: none;">Sample text for logic area</p>
       <button class="btn btn-primary btn-lg" onclick="app(data)" id="startsearching">Start Searching</button><br><br>
-      <div class="form-group">
-        <label for="exampleTextarea">Example text input</label>
+      <div class="form-group" style="display: none;">
+        <label for="exampleTextarea">Please Enter Your Responses Here</label>
         <input type="text" class="form-control" id="exampleTextarea"></input>
-        <button id="submitButton" onclick="getInputFromTextBox()">Okay</button>
+        <button class="btn btn-primary btn-lg" id="submitButton" onclick="getInputFromTextBox()">Okay</button>
       </div>
     </div>
 

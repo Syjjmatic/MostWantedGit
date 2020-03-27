@@ -21,6 +21,8 @@ document.getElementById("exampleTextarea").addEventListener("keypress", function
 
 // app is the function called to start the entire application
 function app(database){
+  document.querySelector("div.form-group").style.display = "block";
+  document.getElementById("mostwanted").style.display = "block";
   document.getElementById("startsearching").innerHTML = "Start Searching";
   document.getElementById("mostwanted").innerHTML = "";
   people = database;
@@ -60,7 +62,7 @@ function mainMenu(person, people){
   }
   currentPerson = person;
   currentFunction = mainMenuPartTwo;
-  promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", chars);
+  promptFor("Found " + person.firstName + " " + person.lastName + ". Do you want to know their 'info', 'family', or 'descendants'? Type the option you want.", chars);
 }
 function mainMenuPartTwo(displayOption){
   switch(displayOption.toLowerCase()){
