@@ -2,7 +2,6 @@
 /*
 Build all of your functions for displaying and gathering information below (GUI).
 */
-var textContent = "";
 var currentFunction;
 var valid;
 var currentQuestion;
@@ -13,6 +12,12 @@ var currentPerson;
 var descendants;
 var criteria;
 var keepSearching;
+
+document.getElementById("exampleTextarea").addEventListener("keypress", function(key){
+  if (key.keyCode === 13){
+    getInputFromTextBox();
+  }
+})
 
 // app is the function called to start the entire application
 function app(database){
