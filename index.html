@@ -21,22 +21,15 @@
 
     <div class="jumbotron">
       <!--Insert logic into p tag below-->
-      <p class="lead">Sample text for logic area</p>
+      <p class="lead" id="mostwanted">Sample text for logic area</p>
       <button class="btn btn-primary btn-lg" onclick="app(data)">Start Searching</button><br><br>
       <div class="form-group">
         <label for="exampleTextarea">Example text input</label>
-        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+        <input type="text" class="form-control" id="exampleTextarea"></input>
+        <button id="submitButton">Okay</button>
       </div>
     </div>
 
-    <div>
-      <p id="mostwanted">
-
-      </p>
-      <input type="text" id="thistext">
-    </div>
-    
-    <button onclick="app(data)">Start Searching</button>
     
     <script src="data.js"></script>
     <script src="app.js"></script>

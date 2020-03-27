@@ -2,6 +2,7 @@
 /*
 Build all of your functions for displaying and gathering information below (GUI).
 */
+var textContent;
 
 // app is the function called to start the entire application
 function app(people){
@@ -198,13 +199,17 @@ function printToPage(textToDisplay){
 }
 function getUserInput(textToDisplay){
   printToPage(textToDisplay);
-  return document.getElementById("thistext");
+
+    document.getElementById("submitButton").onClick(function(){textContent = document.getElementById("exampleTextarea").value;});
+
+  return textContent;
 }
 
 // function that prompts and validates user input
 function promptFor(question, valid){
   do{
     var response = getUserInput(question).trim();
+    textContent = "";
   } while(!response || !valid(response));
   return response;
 }
