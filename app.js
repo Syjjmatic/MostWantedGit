@@ -35,7 +35,7 @@ function mainMenu(person, people){
 
   let displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
 
-  switch(displayOption){
+  switch(displayOption.toLowerCase()){
     case "info":
     displayPerson(person);
     mainMenu(person, people);
@@ -75,10 +75,22 @@ function searchByName(people){
 }
 
 function searchBySingleCriteria(people){
-  let criteria = window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria);
+  let criteria = window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria).toLowerCase().split(" ").join("");
   let searchValue = window.promptFor("What " + criteria + " would you like to search for?", chars);
+  if(isNaN(searchValue)){
+    searchValue = searchValue.toLowerCase();
+  }
+
+  if(criteria === "eyecolor"){
+    return people.filter(function(el){
+      if(el.eyeColor == searchValue){
+        return true;
+      }
+    })
+  }
+
   return people.filter(function(el){
-    if (el[criteria] == searchValue){
+     if (el[criteria] == searchValue){
       return true;
     }
     else{
@@ -186,7 +198,8 @@ function promptFor(question, valid){
 }
 // helper function to check if user enters a valid criteria
 function validCriteria(input){
-  return (input === "firstName" || input === "lastName" || input === "gender" || input === "dob" || input === "height" || input === "weight" || input === "eyeColor" || input === "occupation" || input === "parents" || input === "currentSpouse");
+  input = input.toLowerCase().split(" ").join("");
+  return (input === "firstname" || input === "lastname" || input === "gender" || input === "dob" || input === "height" || input === "weight" || input === "eyecolor" || input === "occupation");
 }
 
 // helper function to pass into promptFor to validate yes/no answers
