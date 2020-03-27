@@ -2,24 +2,36 @@
 /*
 Build all of your functions for displaying and gathering information below (GUI).
 */
-var textContent;
+var textContent = "";
+var currentFunction;
+var valid;
+var currentQuestion;
+var people;
+var searchResults;
+var firstName;
 
 // app is the function called to start the entire application
-function app(people){
-  let searchType = promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
-  let searchResults;
+function app(database){
+  people = database;
+  currentFunction = appPartTwo;
+  promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
+}
+function appPartTwo(searchType){
+  currentFunction = appPartThree;
   switch(searchType){
     case 'yes':
-      searchResults = searchByName(people);
+      searchByName();
       break;
     case 'no':
-      searchResults = searchByMultipleCriteria(people);
+      searchByMultipleCriteria(people);
       break;
       default:
     app(people); // restart app
       break;
   }
-  
+}
+ 
+function appPartThree(){
   // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
   searchResults = searchResults[0];
   mainMenu(searchResults, people);
@@ -33,9 +45,10 @@ function mainMenu(person, people){
     printToPage("Could not find that individual.");
     return app(people); // restart
   }
-
-  let displayOption = promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", chars);
-
+  currentFunction = mainMenuPartTwo;
+  promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", chars);
+}
+function mainMenuPartTwo(displayOption){
   switch(displayOption.toLowerCase()){
     case "info":
     displayPerson(person);
@@ -59,20 +72,20 @@ function mainMenu(person, people){
   }
 }
 
-function searchByName(people){
-  let firstName = promptFor("What is the person's first name?", chars);
-  let lastName = promptFor("What is the person's last name?", chars);
-
-  let foundPerson = people.filter(function(person){
-    if(person.firstName.toLowerCase() === firstName.toLowerCase() && person.lastName.toLowerCase() === lastName.toLowerCase()){
-      return true;
-    }
-    else{
-      return false;
-    }
-  })
+function searchByName(){
+  searchResults = people;
+  currentFunction = getLastName;
+  firstName = promptFor("What is the person's first name?", chars);
+}
+function getLastName(firstName){
+  searchResults = searchResults.filter(p => p.firstName.toLowerCase() === firstName.toLowerCase());
+  currentFunction = getPersonBasedOnName;
+  promptFor("What is the person's last name?", chars);
+}
+function getPersonBasedOnName(lastName){
+  let foundPerson = searchResults.filter(p => p.lastName.toLowerCase() === lastName.toLowerCase())[0];
   // TODO: find the person using the name they entered
-  return foundPerson;
+  mainMenu(foundPerson, people);
 }
 
 function searchBySingleCriteria(people){
@@ -194,24 +207,34 @@ function checkIfTwoArraysHaveAnElementInCommon(arrayOne, arrayTwo){
   }
   return false;
 }
+function displayPromptMessage(promptMessage){
+  document.getElementById("prompt").innerHTML = promptMessage;
+}
 function printToPage(textToDisplay){
   document.getElementById("mostwanted").innerHTML = textToDisplay;
 }
 function getUserInput(textToDisplay){
-  printToPage(textToDisplay);
-
-    document.getElementById("submitButton").onClick(function(){textContent = document.getElementById("exampleTextarea").value;});
-
-  return textContent;
+  displayPromptMessage(textToDisplay);
+}
+function getInputFromTextBox(){
+  var response = document.getElementById("exampleTextarea").value;
+  document.getElementById("exampleTextarea").value = "";
+  validateResponse(response.trim());
 }
 
 // function that prompts and validates user input
-function promptFor(question, valid){
-  do{
-    var response = getUserInput(question).trim();
-    textContent = "";
-  } while(!response || !valid(response));
-  return response;
+function promptFor(question, isValid){
+    getUserInput(question);
+    valid = isValid;
+    currentQuestion = question;
+}
+function validateResponse(response){
+  if (!response || !valid(response)){
+    promptFor(currentQuestion, valid);
+  }
+  else{
+    currentFunction(response);
+  }
 }
 // helper function to check if user enters a valid criteria
 function validCriteria(input){
