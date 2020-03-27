@@ -54,24 +54,25 @@ function mainMenu(person, people){
 function mainMenuPartTwo(displayOption){
   switch(displayOption.toLowerCase()){
     case "info":
-    displayPerson(currentPerson);
-    mainMenu(currentPerson, people);
-    break;
+      displayPerson(currentPerson);
+      mainMenu(currentPerson, people);
+      break;
     case "family":
-    displayImmediateFamilyOf(currentPerson, people);
-    mainMenu(currentPerson, people);
-    break;
+      displayImmediateFamilyOf(currentPerson, people);
+      mainMenu(currentPerson, people);
+      break;
     case "descendants":
-    displayDescendants(currentPerson, people);
-    mainMenu(currentPerson, people);
-    break;
+      descendants = "";
+      displayDescendants(currentPerson, people);
+      mainMenu(currentPerson, people);
+      break;
     case "restart":
-    app(people); // restart
-    break;
+      app(people); // restart
+      break;
     case "quit":
-    return; // stop execution
+      return; // stop execution
     default:
-    return mainMenu(currentPerson, people); // ask again
+      return mainMenu(currentPerson, people); // ask again
   }
 }
 
@@ -132,7 +133,7 @@ function displayPeople(people){
   if(people.length > 0){
     printToPage(people.map(function(person){
       return person.firstName + " " + person.lastName;
-    }).join("\n"));
+    }).join("<hr>"));
   }
   else{
     printToPage("No people found.");
@@ -153,21 +154,23 @@ function displayPerson(person){
   personInfo += "Occupation: " + person.occupation;
   printToPage(personInfo);
 }
-function displayDescendants(person, people){
+function displayDescendants(person, people, indentation = ""){
   //Display children of person, and children of children.
   let children = people.filter(function(el){
     return(el["parents"].includes(person["id"]));
   });
   if (children.length > 0)
   {
-    printToPage(person.firstName + " " + person.lastName + "'s Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
+    descendants += (indentation + person.firstName + " " + person.lastName + "'s Children: " + children.map(c => " " + c.firstName + " " + c.lastName));
   }
   else{
-    printToPage(person.firstName + " " + person.lastName + " does not have any children in the database.");
+    descendants += (indentation + person.firstName + " " + person.lastName + " does not have any children in the database.");
   }
+  descendants += "<hr>";
   for (let i = 0; i < children.length; i++){
-    displayDescendants(children[i], people);
+    displayDescendants(children[i], people, indentation + "--");
   }
+  printToPage(descendants);
 }
 function displayImmediateFamilyOf(person, people){
   //Display parents and siblings of person.
