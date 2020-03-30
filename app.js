@@ -221,6 +221,9 @@ function displayImmediateFamilyOf(person, people){
   let spouse = people.filter(function(el){
     return person.currentSpouse === el.id;
   });
+  if (parents.length + siblings.length + spouse.length === 0){
+    immediateFamily += " No parents, siblings, or spouse found in the database.";
+  }
   if (parents.length > 0){
     immediateFamily += "\nParent(s): " + parents.map(p => "\n" + p.firstName + " " + p.lastName);
   }
@@ -274,7 +277,7 @@ function validateResponse(response){
 // helper function to check if user enters a valid criteria
 function validCriteria(input){
   input = input.toLowerCase().split(" ").join("");
-  return (input === "firstname" || input === "lastname" || input === "gender" || input === "dob" || input === "height" || input === "weight" || input === "eyecolor" || input === "occupation");
+  return (input === "gender" || input === "dob" || input === "height" || input === "weight" || input === "eyecolor" || input === "occupation");
 }
 
 // helper function to pass into promptFor to validate yes/no answers
