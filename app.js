@@ -1,7 +1,5 @@
 "use strict"
-/*
-Build all of your functions for displaying and gathering information below (GUI).
-*/
+
 var currentFunction;
 var valid;
 var currentQuestion;
@@ -19,7 +17,6 @@ document.getElementById("exampleTextarea").addEventListener("keypress", function
   }
 })
 
-// app is the function called to start the entire application
 function app(database){
   document.querySelector("div.form-group").style.display = "block";
   document.getElementById("mostwanted").style.display = "block";
@@ -29,6 +26,7 @@ function app(database){
   currentFunction = appPartTwo;
   promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo);
 }
+
 function appPartTwo(searchType){
   document.getElementById("startsearching").innerHTML = "Start Over";
   currentFunction = appPartThree;
@@ -40,30 +38,28 @@ function appPartTwo(searchType){
       searchResults = people;
       searchByMultipleCriteria();
       break;
-      default:
-    app(people); // restart app
+    default:
+      app(people);
       break;
   }
 }
  
 function appPartThree(){
-  // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
   searchResults = searchResults[0];
   mainMenu(searchResults, people);
 }
-// Menu function to call once you find who you are looking for
+
 function mainMenu(person, people){
-
-  /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
-
   if(!person){
     printToPage("Could not find that individual.");
-    return app(people); // restart
+    return app(people);
   }
+
   currentPerson = person;
   currentFunction = mainMenuPartTwo;
   promptFor("Found " + person.firstName + " " + person.lastName + ". Do you want to know their 'info', 'family', or 'descendants'? Type the option you want.", chars);
 }
+
 function mainMenuPartTwo(displayOption){
   switch(displayOption.toLowerCase()){
     case "info":
@@ -80,12 +76,12 @@ function mainMenuPartTwo(displayOption){
       mainMenu(currentPerson, people);
       break;
     case "restart":
-      app(people); // restart
+      app(people);
       break;
     case "quit":
-      return; // stop execution
+      return;
     default:
-      return mainMenu(currentPerson, people); // ask again
+      return mainMenu(currentPerson, people);
   }
 }
 
@@ -94,26 +90,29 @@ function searchByName(){
   currentFunction = getLastName;
   promptFor("What is the person's first name?", chars);
 }
+
 function getLastName(firstName){
   searchResults = searchResults.filter(p => p.firstName.toLowerCase() === firstName.toLowerCase());
   currentFunction = getPersonBasedOnName;
   promptFor("What is the person's last name?", chars);
 }
+
 function getPersonBasedOnName(lastName){
   let foundPerson = searchResults.filter(p => p.lastName.toLowerCase() === lastName.toLowerCase())[0];
-  // TODO: find the person using the name they entered
   mainMenu(foundPerson, people);
 }
 
 function searchBySingleCriteria(){
   currentFunction = searchBySingleCriteriaPartTwo;
-  window.promptFor("Enter criteria to search for: gender, height, weight, eyeColor, or occupation.", validCriteria);
+  window.promptFor("Enter criteria to search for: gender, height, weight, eye color, or occupation.", validCriteria);
 }
+
 function searchBySingleCriteriaPartTwo(response){
   criteria = response.split(" ").join("");
   currentFunction = searchBySingleCriteriaPartThree;
   window.promptFor("What " + criteria + " would you like to search for?", chars);
 }
+
 function searchBySingleCriteriaPartThree(response){
   let searchValue = response;
   if(isNaN(searchValue)){
@@ -137,6 +136,7 @@ function searchBySingleCriteriaPartThree(response){
     }
   });
   }
+  
   displayPeople(searchResults);
   searchByMultipleCriteriaPartTwo();
 }
@@ -144,10 +144,12 @@ function searchBySingleCriteriaPartThree(response){
 function searchByMultipleCriteria(){
   searchBySingleCriteria();
 }
+
 function searchByMultipleCriteriaPartTwo(){
   currentFunction = searchByMultipleCriteriaPartThree;
-  window.promptFor("Would you like to narrow down your search with additional criteria?", yesNo);
+  window.promptFor("Would you like to narrow down your search with additional criteria? (YES/NO)", yesNo);
 }
+
 function searchByMultipleCriteriaPartThree(response){
   if(response === "yes" && searchResults.length > 1){
     searchByMultipleCriteria();
@@ -157,7 +159,6 @@ function searchByMultipleCriteriaPartThree(response){
   }
 }
 
-// prints a list of people
 function displayPeople(peopleToDisplay){
   if(peopleToDisplay.length > 0){
     printToPage(peopleToDisplay.map(function(person){
@@ -170,11 +171,8 @@ function displayPeople(peopleToDisplay){
 }
 
 function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
   let personInfo = "First Name: " + person.firstName + "<hr>";
   personInfo += "Last Name: " + person.lastName + "<hr>";
-  // TODO: finish getting the rest of the information to display
   personInfo += "Gender: " + person.gender + "<hr>";
   personInfo += "DOB: " + person.dob + "<hr>";
   personInfo += "Height: " + person.height + "<hr>";
@@ -183,8 +181,8 @@ function displayPerson(person){
   personInfo += "Occupation: " + person.occupation;
   printToPage(personInfo);
 }
+
 function displayDescendants(person, people, indentation = ""){
-  //Display children of person, and children of children.
   let children = people.filter(function(el){
     return(el["parents"].includes(person["id"]));
   });
@@ -201,8 +199,8 @@ function displayDescendants(person, people, indentation = ""){
   }
   printToPage(descendants);
 }
+
 function displayImmediateFamilyOf(person, people){
-  //Display parents and siblings of person.
   let immediateFamily = "Immediate family of " + person.firstName + " " + person.lastName + ":";
   let parents = people.filter(function(el){
     if (person.parents.includes(el.id)){
@@ -235,6 +233,7 @@ function displayImmediateFamilyOf(person, people){
   }
   printToPage(immediateFamily);
 }
+
 function checkIfTwoArraysHaveAnElementInCommon(arrayOne, arrayTwo){
   for (let i = 0; i < arrayOne.length; i++){
     for (let j = 0; j < arrayTwo.length; j++){
@@ -245,27 +244,31 @@ function checkIfTwoArraysHaveAnElementInCommon(arrayOne, arrayTwo){
   }
   return false;
 }
+
 function displayPromptMessage(promptMessage){
   document.getElementById("prompt").innerHTML = promptMessage;
 }
+
 function printToPage(textToDisplay){
   document.getElementById("mostwanted").innerHTML = textToDisplay;
 }
+
 function getUserInput(textToDisplay){
   displayPromptMessage(textToDisplay);
 }
+
 function getInputFromTextBox(){
   var response = document.getElementById("exampleTextarea").value;
   document.getElementById("exampleTextarea").value = "";
   validateResponse(response.trim());
 }
 
-// function that prompts and validates user input
 function promptFor(question, isValid){
     getUserInput(question);
     valid = isValid;
     currentQuestion = question;
 }
+
 function validateResponse(response){
   if (!response || !valid(response)){
     promptFor(currentQuestion, valid);
@@ -274,18 +277,16 @@ function validateResponse(response){
     currentFunction(response.toLowerCase());
   }
 }
-// helper function to check if user enters a valid criteria
+
 function validCriteria(input){
   input = input.toLowerCase().split(" ").join("");
   return (input === "gender" || input === "dob" || input === "height" || input === "weight" || input === "eyecolor" || input === "occupation");
 }
 
-// helper function to pass into promptFor to validate yes/no answers
 function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
 }
 
-// helper function to pass in as default promptFor validation
 function chars(input){
-  return true; // default validation only
+  return true;
 }
